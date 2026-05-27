@@ -29,6 +29,7 @@ const API = "http://localhost:3001";
           GET /posts
         </button>
         <button
+          id="btn-get-one"
           class="rounded bg-blue-900 px-4 py-2 text-white hover:bg-blue-700"
         >
           GET /posts/1
@@ -77,10 +78,21 @@ const API = "http://localhost:3001";
         const url = API + "/posts";
         const response = await fetch(url);
         const data = await response.json();
-        // console.log(data);
+        console.log(data);
 
         showResponse(response.status, data);
       }
+
+      async function getOnePost() {
+        const url = `${API}/posts/1`;
+        const response = await fetch(url);
+        const post = await response.json();
+        console.log(post);
+
+
+        showResponse(response.status, post);
+        
+      };
 
       async function createPost() {
         output.textContent = "loading....";
@@ -115,6 +127,9 @@ const API = "http://localhost:3001";
         .getElementById("btn-list")
         .addEventListener("click", getAllPosts);
 
+      document
+        .getElementById("btn-get-one")
+        .addEventListener("click", getOnePost);
       document
         .getElementById("btn-create")
         .addEventListener("click", createPost);
