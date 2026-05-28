@@ -72,11 +72,13 @@ const API = "http://localhost:3001";
 					POST /posts
 				</button>
 				<button
+          id="btn-update"
 					class="rounded bg-blue-900 px-4 py-2 text-white hover:bg-blue-700"
 				>
 					PUT /posts
 				</button>
 				<button
+          id="btn-edit"
 					class="rounded bg-blue-900 px-4 py-2 text-white hover:bg-blue-700"
 				>
 					PATCH /posts
@@ -154,6 +156,36 @@ const API = "http://localhost:3001";
 				}
 			}
 
+      async function putPost() {
+				try {
+          const id = document.getElementById("input-id").value;
+					const title = document.getElementById("input-title").value;
+					const body = document.getElementById("input-body").value;
+					const userid = Number(document.getElementById("input-userid").value);
+					const updatedPost = {
+						title: title,
+						body: body,
+						userId: userid,
+					};
+
+					const url = `${API}/posts/${id}`;
+					const response = await fetch(url, {
+						method: "PUT",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(updatedPost),
+					});
+					const data = await response.json();
+
+					showResponse(response.status, data);
+
+					document.getElementById("input-title").value = "";
+					document.getElementById("input-body").value = "";
+					document.getElementById("input-userid").value = "";
+				} catch (error) {
+					output.textContent = `Error: ${error.message}`;
+				}
+      };
+
       async function deletePost() {
         const id = document.getElementById("input-id").value;
 				const url = `${API}/posts/${id}`;
@@ -172,6 +204,9 @@ const API = "http://localhost:3001";
 			document
 				.getElementById("btn-create")
 				.addEventListener("click", createPost);
+      document
+				.getElementById("btn-update")
+				.addEventListener("click", putPost);
       document
 				.getElementById("btn-delete")
 				.addEventListener("click", deletePost);
