@@ -24,14 +24,18 @@ const API = "http://localhost:3001";
 			<div class="mt-6 rounded bg-gray-200 p-4">
 				<h2 class="mb-2 font-bold text-gray-700">Post Form</h2>
 
-				<label class="text-xs font-semibold text-gray-500 mb-1">Post ID (PUT, PATCH, DELETE)</label>
+				<label class="text-xs font-semibold text-gray-500 mb-1"
+					>Post ID (PUT, PATCH, DELETE)</label
+				>
 				<input
 					id="input-id"
 					type="number"
 					placeholder="Post ID"
 					class="mb-3 block w-full rounded p-2 border border-gray-300"
 				/>
-				<label class="text-xs font-semibold text-gray-500 mb-1">Content (POST, PUT, PATCH)</label>
+				<label class="text-xs font-semibold text-gray-500 mb-1"
+					>Content (POST, PUT, PATCH)</label
+				>
 				<input
 					id="input-title"
 					type="text"
@@ -72,19 +76,19 @@ const API = "http://localhost:3001";
 					POST /posts
 				</button>
 				<button
-          id="btn-update"
+					id="btn-update"
 					class="rounded bg-blue-900 px-4 py-2 text-white hover:bg-blue-700"
 				>
 					PUT /posts
 				</button>
 				<button
-          id="btn-edit"
+					id="btn-edit"
 					class="rounded bg-blue-900 px-4 py-2 text-white hover:bg-blue-700"
 				>
 					PATCH /posts
 				</button>
 				<button
-          id="btn-delete"
+					id="btn-delete"
 					class="rounded bg-blue-900 px-4 py-2 text-white hover:bg-blue-700"
 				>
 					DELETE /posts
@@ -156,9 +160,9 @@ const API = "http://localhost:3001";
 				}
 			}
 
-      async function putPost() {
+			async function putPost() {
 				try {
-          const id = document.getElementById("input-id").value;
+					const id = document.getElementById("input-id").value;
 					const title = document.getElementById("input-title").value;
 					const body = document.getElementById("input-body").value;
 					const userid = Number(document.getElementById("input-userid").value);
@@ -178,18 +182,56 @@ const API = "http://localhost:3001";
 
 					showResponse(response.status, data);
 
+					document.getElementById("input-id").value = "";
 					document.getElementById("input-title").value = "";
 					document.getElementById("input-body").value = "";
 					document.getElementById("input-userid").value = "";
 				} catch (error) {
 					output.textContent = `Error: ${error.message}`;
 				}
-      };
+			}
 
-      async function deletePost() {
-        const id = document.getElementById("input-id").value;
+			async function patchPost() {
+				try {
+					const id = document.getElementById("input-id").value;
+					const title = document.getElementById("input-title").value;
+					const body = document.getElementById("input-body").value;
+					const userid = document.getElementById("input-userid").value;
+					const updatedPost = {};
+
+					if (title !== "") {
+						updatedPost.title = title;
+					}
+					if (body !== "") {
+						updatedPost.body = body;
+					}
+					if (userid !== "") {
+						updatedPost.userId = Number(userid);
+					}
+
+					const url = `${API}/posts/${id}`;
+					const response = await fetch(url, {
+						method: "PATCH",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(updatedPost),
+					});
+					const data = await response.json();
+
+					showResponse(response.status, data);
+
+					document.getElementById("input-id").value = "";
+					document.getElementById("input-title").value = "";
+					document.getElementById("input-body").value = "";
+					document.getElementById("input-userid").value = "";
+				} catch (error) {
+					output.textContent = `Error: ${error.message}`;
+				}
+			}
+
+			async function deletePost() {
+				const id = document.getElementById("input-id").value;
 				const url = `${API}/posts/${id}`;
-				const response = await fetch(url, {method: "DELETE"});
+				const response = await fetch(url, { method: "DELETE" });
 				const post = await response.json();
 
 				showResponse(response.status, post);
@@ -204,10 +246,9 @@ const API = "http://localhost:3001";
 			document
 				.getElementById("btn-create")
 				.addEventListener("click", createPost);
-      document
-				.getElementById("btn-update")
-				.addEventListener("click", putPost);
-      document
+			document.getElementById("btn-update").addEventListener("click", putPost);
+			document.getElementById("btn-edit").addEventListener("click", patchPost);
+			document
 				.getElementById("btn-delete")
 				.addEventListener("click", deletePost);
 		</script>
